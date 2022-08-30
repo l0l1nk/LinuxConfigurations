@@ -1,0 +1,2 @@
+# LinuxConfigurations
+My ParrotOS configurations
