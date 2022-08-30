@@ -1,0 +1,235 @@
+Esta configuración es una mezcla de estos dos vídeos:
+
+[Configuraciones de entorno]
+https://www.youtube.com/watch?v=mHLwfI1nHHY
+
+[Configuración de la kitty(Terminal)]
+https://www.youtube.com/watch?v=fshLf6u8B-w
+
+----------------------------------------------------------------
+
+1. Instalamos los siguientes paquetes:
+
+apt install build-essential git kitty firejail feh vim xcb libxcb-util0-dev libxcb-ewmh-dev libxcb-randr0-dev libxcb-icccm4-dev
+ libxcb-keysyms1-dev libxcb-xinerama0-dev libasound2-dev libxcb-xtest0-dev libxcb-shape0-dev
+
+----------------------------------------------------------------
+
+2. Instalamos bspwm y sxhkd:
+
+cd /home/s4vitar/Descargas/
+git clone https://github.com/baskerville/bspwm.git
+git clone https://github.com/baskerville/sxhkd.git
+cd bspwm/
+make
+sudo make install
+cd ../sxhkd/
+make
+sudo make install
+
+sudo apt install bspwm
+
+----------------------------------------------------------------
+
+3. Cargamos en bspwm y sxhkd ficheros de ejemplo:
+
+mkdir ~/.config/bspwm
+mkdir ~/.config/sxhkd
+cd /home/s4vitar/Descargas/bspwm/
+cp examples/bspwmrc ~/.config/bspwm/
+chmod +x ~/.config/bspwm/bspwmrc 
+cp examples/sxhkdrc ~/.config/sxhkd/
+
+----------------------------------------------------------------
+
+4. Copiamos en el sxhkdrc nuestro fichero de configuración:
+
+sudo rm ~/.config/sxhkd/sxhkdrc
+cp /home/l0l1nk/Desktop/ParrotOS/configs/sxhkd/sxhkdrc ~/.config/sxhkd/
+
+----------------------------------------------------------------
+
+5. Copiamos el archivo bspwm_resize:
+
+cp /home/l0l1nk/Desktop/ParrotOS/configs/bspwm/scripts/bspwm_resizw ~/.config/bspwm/scripts/
+
+----------------------------------------------------------------
+
+6. Procedemos a instalar la polybar. Para ello, instalamos primero los siguientes paquetes:
+
+sudo apt install cmake cmake-data pkg-config python3-sphinx libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev
+ libxcb-composite0-dev python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-xkb-dev libxcb-xrm-dev
+ libxcb-cursor-dev libasound2-dev libpulse-dev libjsoncpp-dev libmpdclient-dev libuv1dev libnl-genl-3-dev
+
+Para instalar la polybar hacemos lo siguiente:
+
+cd /home/l0l1nk/Descargas/
+git clone --recursive https://github.com/polybar/polybar
+cd polybar/
+mkdir build
+cd build/
+cmake ..
+make -j$(nproc)
+sudo make install
+
+----------------------------------------------------------------
+
+7. Procedemos con la instalación de Picom para ajustar las transparencias.
+
+Primeramente, instalamos los siguientes paquetes, no sin antes actualizar el sistema:
+
+sudo apt update
+sudo apt install meson libxext-dev libxcb1-dev libxcb-damage0-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-render-util0-dev
+ libxcb-render0-dev libxcb-randr0-dev libxcb-composite0-dev libxcb-image0-dev libxcb-present-dev libxcb-xinerama0-dev libpixman-1-dev
+ libdbus-1-dev libconfig-dev libgl1-mesa-dev libpcre2-dev libevdev-dev uthash-dev libev-dev libx11-xcb-dev libxcb-glx0-dev
+
+Posteriormente, ejecutamos los siguientes comandos bajo el directorio ~/Descargas:
+
+git clone https://github.com/ibhagwan/picom.git
+cd picom/
+git submodule update --init --recursive
+meson --buildtype=release . build
+ninja -C build
+sudo ninja -C build install
+
+----------------------------------------------------------------
+
+9. En este punto, reiniciamos el equipo y seleccionamos bspwm (Probamos que los shortcuts estén funcionando correctamente).
+
+----------------------------------------------------------------
+
+10.Instalamos las Hack Nerd Fonts, deben ir descomprimidas en /usr/local/share/fonts/, una vez hecho hay que ejecutar el comando 'fc-cache -v'].
+
+https://www.nerdfonts.com/font-downloads
+
+----------------------------------------------------------------
+
+13. Cambiamos el fondo de pantalla usando 'feh', guardamos el fondo en un directorio y añadimos la siguiente linia al archivo bspwmrc.
+
+feh --bg-fill /home/l0l1nk/Desktop/Images/wallpaper.jpg
+
+----------------------------------------------------------------
+
+15. Para configurar nuestra Polybar, clonaremos primeramente en 'Descargas' el siguiente repositorio:
+
+git clone https://github.com/VaughnValle/blue-sky.git
+
+Posteriormente, ejecutaremos los siguientes comandos:
+
+mkdir ~/.config/polybar
+cd ~/Descargas/blue-sky/polybar/
+cp * -r ~/.config/polybar
+echo '~/.config/polybar/./launch.sh' >> ~/.config/bspwm/bspwmrc 
+cd fonts
+sudo cp * /usr/share/fonts/truetype/
+fc-cache -v
+
+Hacemos Windows + Alt + R para cargar la configuración y deberíamos ver la Polybar por arriba.
+
+Configuramos la Polybar a nuestro gusto.
+
+----------------------------------------------------------------
+
+16. Para configurar Picom y ajustar las transparencias además de bordeados de ventana, ejecutamos los siguientes pasos:
+
+mkdir ~/.config/picom
+cd ~/.config/picom
+cp /home/l0l1nk/Desktop/ParrotOS/configs/picom/picom.conf .
+
+Antes de recargar la configuración, hacemos un seguimiento del ratón para saber en qué ventana estamos con la siguiente instrucción en el 'bspwm':
+
+bspc config focus_follows_pointer true
+
+Posteriormente, ejecutamos los siguientes comandos para aplicar los bordeados:
+
+echo 'picom --experimental-backends &' >> ~/.config/bspwm/bspwmrc 
+echo 'bspc config border_width 0' >> ~/.config/bspwm/bspwmrc
+
+----------------------------------------------------------------
+
+17. Reiniciamos el sistema y una vez arrancado, y si hay algún problema con el cursor incorporamos en el archivo 'bspwmrc' la siguiente línea:
+
+xsetroot -cursor_name left_ptr &
+
+----------------------------------------------------------------
+
+18. Instalamos la powerlevel10k en zsh.
+
+'FALTAN LOS PASOS'
+
+----------------------------------------------------------------
+
+19. Creamos enlace simbólico de la zshrc para root.
+
+'FALTAN LOS PASOS'
+
+----------------------------------------------------------------
+
+20. Cambiamos el tipo de shell por defecto tanto para root como para el usuario con bajos privilegios.
+
+usermod --shell /usr/bin/zsh l0l1nk
+usermod --shell /usr/bin/zsh root
+
+----------------------------------------------------------------
+
+24. Retocamos el archivo .p10k.zsh como queramos.
+
+Para el de root, podemos ir a 'POWERLEVEL9K_CONTEXT_ROOT_TEMPLATE' para asignar el Hashtag.
+
+Comentamos la siguiente línea:
+
+# POWERLEVEL9K_CONTEXT_PREFIX='%246Fwith '
+
+Para evitar un pequeño problema de permisos a la hora de desde el usuario root migrar con 'su' al usuario con bajos privilegios, ejecutamos los siguientes comandos:
+
+chown s4vitar:s4vitar /root
+chown s4vitar:s4vitar /root/.cache -R
+chown s4vitar:s4vitar /root/.local -R
+
+----------------------------------------------------------------
+
+25. Instalamos bat, lsd, fzf y ranger.
+
+'FALTAN LOS PASOS'
+
+----------------------------------------------------------------
+
+26. Instalar el plugin sudo.
+
+'FALTAN LOS PASOS'
+
+----------------------------------------------------------------
+
+27. Instalamos nvim con el theme nord (Copiado literal, mejor buscar vídeo xd).
+
+cd .config/nvim/
+wget https://github.com/arcticicestudio/nord-vim/archive/master.zip
+unzip master.zip 
+rm master.zip 
+mv nord-vim-master/colors/ .
+rm -r nord-vim-master/
+
+Añadimos al archivo 'init.vim' la línea 'colorscheme nord' justo al final.
+
+wget https://raw.githubusercontent.com/Necros1s/lotus/master/lotus.vim
+wget https://raw.githubusercontent.com/Necros1s/lotus/master/lotusbar.vim
+wget https://raw.githubusercontent.com/Necros1s/lotus/master/init.vim (Quitamos las líneas del plug)
+
+Añadimos justo al final del 'init.vim' la línea 'syntax on' para la detección de sintaxis.
+
+[TODO ESTE PROCESO HAY QUE HACERLO TAMBIÉN COMO EL USUARIO ROOT]
+
+Incorporamos posteriormente las siguientes líneas al final del zshrc para que al salir del nvim no se quede el cursor en modo Block:
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select {
+  if [[ $KEYMAP == vicmd ]] || [[ $1 = 'block' ]]; then
+    echo -ne '\e[1 q'
+  elif [[ $KEYMAP == main ]] || [[ $KEYMAP == viins ]] || [[ $KEYMAP = '' ]] || [[ $1 = 'beam' ]]; then
+    echo -ne '\e[5 q'
+  fi
+}
+zle -N zle-keymap-select
+
+# Start with beam shape cursor on zsh startup and after every command.
+zle-line-init() { zle-keymap-select 'beam'}

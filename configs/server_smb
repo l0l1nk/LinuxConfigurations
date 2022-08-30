@@ -1,0 +1,1 @@
+sudo impacket-smbserver smbFolder $(pwd) -smb2support -username l0l1nk -password l0l1nk123
